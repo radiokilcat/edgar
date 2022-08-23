@@ -18,6 +18,10 @@ settings::settings(int argc, char** argv)
         std::cout << desc << std::endl;
         throw std::logic_error("help is printed.");
     }
+    if (!vm_.count("file"))
+    {
+        throw std::logic_error("Specify settings file");
+    }
 }
 
 boost::program_options::options_description settings::create_description(int argc, char **argv) {
@@ -27,8 +31,11 @@ boost::program_options::options_description settings::create_description(int arg
 
     desc.add_options()
             ("help,h", "print usage message")
-            ("file,f", "settings file")
+            ("file,f", value<std::string>(), "settings file")
             ;
     return desc;
 }
+void settings::read_file_settings()
+{
 
+}

@@ -1,41 +1,24 @@
-//
-// Created by alex on 3/20/22.
-//
-
-#ifndef EDGAR_TELEGRAM_INTERFACE_HPP
-#define EDGAR_TELEGRAM_INTERFACE_HPP
+#pragma once
 
 #include <tgbot/Bot.h>
 #include "map"
 #include "string"
+#include "filesystem"
 
 
 class telegram_interface {
 public:
-    static int main_loop();
-    telegram_interface();
+    int main_loop();
+    telegram_interface(std::filesystem::path& p);
 
 private:
-//    std::map<tg_commands, std::function<>> router_;
-  TgBot::Bot bot_;
+    void read_config_file(std::filesystem::path& p);
+    std::string token_;
 
-  enum class tg_commands
-  {
-    start,
-    saveTheWorld,
-    feedTheCat
-  };
-
-  void handleCommand();
-  std::string string_command(tg_commands command);
-
-  std::array<std::string, 3> commands_ = {
-      "start",
-      "saveTheWorld",
-      "feedTheCat"
-  };
-
+    enum class tg_commands
+    {
+        start,
+        saveTheWorld,
+        feedTheCat
+    };
 };
-
-
-#endif //EDGAR_TELEGRAM_INTERFACE_HPP

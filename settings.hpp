@@ -11,13 +11,17 @@
 class settings {
 public:
   settings(int argc, char **argv);
+    boost::program_options::variables_map vm_;
 
 private:
+    void read_file_settings();
+
     int argc_;
     char** argv_;
     boost::program_options::option_description desc_;
     boost::program_options::options_description create_description(int argc, char** argv);
-    boost::program_options::variables_map vm_;
+
+    std::string token_;
 };
 
 

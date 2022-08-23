@@ -1,31 +1,25 @@
-//
-// Created by alex on 3/20/22.
-//
-
 #include "telegram_interface.hpp"
 #include "tgbot/tgbot.h"
 
-telegram_interface::telegram_interface()
-  : bot_("aldksfjaldksfj")
+telegram_interface::telegram_interface(std::filesystem::path& p)
 {
-
+    read_config_file(p);
 }
 
-int telegram_interface::main_loop() {
+int telegram_interface::main_loop()
+{
+    TgBot::Bot bot(token_);
 
-  /* TODO: read config */
-
-    TgBot::Bot bot("1355180721:AAHgC-zybPnOmv41VgeYuLFc1wwKwkPwNxg");
-
-
-
-    bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message) {
+    bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message)
+    {
         bot.getApi().sendMessage(message->chat->id, "Hi!");
     });
 
-    bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
+    bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message)
+    {
         printf("User wrote %s\n", message->text.c_str());
-        if (StringTools::startsWith(message->text, "/start")) {
+        if (StringTools::startsWith(message->text, "/start"))
+        {
             return;
         }
         bot.getApi().sendMessage(message->chat->id, "Your message is: " + message->text);
@@ -44,11 +38,28 @@ int telegram_interface::main_loop() {
     return 0;
 }
 
-std::string telegram_interface::string_command(tg_commands command)
+//std::string telegram_interface::string_command(tg_commands command)
+//{
+//    switch (command)
+//    {
+//      case tg_commands::start: return "start";
+//      case tg_commands::feedTheCat: return "feedTheCat";
+//      case tg_commands::saveTheWorld: return "saveTheWorld";
+//    }
+//}
+
+void telegram_interface::read_config_file(std::filesystem::path& p)
 {
-    switch (command) {
-      case tg_commands::start: return "start";
-      case tg_commands::feedTheCat: return "feedTheCat";
-      case tg_commands::saveTheWorld: return "saveTheWorld";
+    std::ifstream f;
+    f.open(p);
+    if (!f)
+    {
+        std::cerr << "file could not be opened" << std::endl;
+        return;
     }
+    while (f)
+    {
+        f >> token_;
+    }
+    std::cout << token_ << std::endl;
 }
