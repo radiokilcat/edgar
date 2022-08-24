@@ -8,6 +8,9 @@ telegram_interface::telegram_interface(std::filesystem::path& p)
 
 int telegram_interface::main_loop()
 {
+    const std::string photoFilePath = "example.jpg";
+    const std::string photoMimeType = "image/jpeg";
+
     TgBot::Bot bot(token_);
 
     bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message)
@@ -15,8 +18,17 @@ int telegram_interface::main_loop()
         bot.getApi().sendMessage(message->chat->id, "Hi!");
     });
 
+//    bot.getEvents().onCommand("photo", [&bot, &photoFilePath, &photoMimeType](TgBot::Message::Ptr message) {
+//            bot.getApi().sendPhoto(message->chat->id, TgBot::InputFile::fromFile(photoFilePath, photoMimeType));
+//        });
+
     bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message)
     {
+        if (!message->photo.empty())
+        {
+            bot.getApi().sendMessage(message->chat->id, "I received your photo, thx! ");
+            return;
+        }
         printf("User wrote %s\n", message->text.c_str());
         if (StringTools::startsWith(message->text, "/start"))
         {

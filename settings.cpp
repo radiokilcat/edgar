@@ -1,7 +1,3 @@
-//
-// Created by alex on 3/21/22.
-//
-
 #include <iostream>
 #include "settings.hpp"
 
